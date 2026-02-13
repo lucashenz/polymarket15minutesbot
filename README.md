@@ -27,7 +27,7 @@ tests/
   - spread
 - Normalização binária para manter soma próxima de 100%.
 - Retry com backoff exponencial para lidar com rate limit e falhas temporárias (implementado com `urllib` da biblioteca padrão).
-- Dashboard Streamlit com atualização automática, barras de progresso UP/DOWN e tendência contra a atualização anterior.
+- Dashboard Streamlit com atualização automática a cada 3 segundos (sem recarregar a página inteira), barras de progresso UP/DOWN e tendência contra a atualização anterior.
 
 ## Como rodar
 
@@ -36,6 +36,7 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 streamlit run dashboard.py
+# o painel atualiza automaticamente as probabilidades a cada 3s
 ```
 
 ## Testes
