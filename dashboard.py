@@ -6,6 +6,9 @@ import streamlit as st
 
 from tracker import PolymarketAPIError, collect_event_probabilities
 
+from tracker.slug_manager import SlugManager
+
+
 st.set_page_config(page_title="Polymarket Real-Time Probability Tracker", layout="centered")
 
 st.markdown(
@@ -27,7 +30,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.title("📈 Polymarket Real-Time Probability Tracker")
+st.title("bot")
 
 with st.sidebar:
     slug = st.text_input("Event slug", value="bitcoin-up-or-down-february-13-9am-et")
