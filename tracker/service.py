@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from tracker.config import CLOB_BOOK_URL, COINGECKO_SIMPLE_PRICE_URL, GAMMA_EVENTS_URL
+from tracker.config import CLOB_BOOK_URL, GAMMA_EVENTS_URL
 from tracker.errors import PolymarketAPIError
 from tracker.http_client import request_json_with_retries
 from tracker.models import OrderBookSnapshot
@@ -35,13 +35,10 @@ def get_market_data(slug: str) -> dict[str, Any]:
     outcomes = [str(x) for x in parse_json_array(chosen_market.get("outcomes"))]
     labels = outcomes[:2] if len(outcomes) >= 2 else ["UP/YES", "DOWN/NO"]
 
-    market_end_time = chosen_market.get("endDate") or event.get("endDate") or event.get("end_date")
-
     return {
         "event_slug": slug,
         "event_title": event.get("title") or slug,
         "market_question": chosen_market.get("question") or "",
-        "market_end_time": market_end_time,
         "token_ids": chosen_token_ids,
         "labels": labels,
     }
@@ -72,19 +69,6 @@ def calculate_probability(token_id: str) -> OrderBookSnapshot:
     )
 
 
-def get_btc_price_usd() -> float | None:
-    payload = request_json_with_retries(
-        COINGECKO_SIMPLE_PRICE_URL,
-        params={"ids": "bitcoin", "vs_currencies": "usd"},
-    )
-    if not isinstance(payload, dict):
-        return None
-    btc_payload = payload.get("bitcoin")
-    if not isinstance(btc_payload, dict):
-        return None
-    return to_float(btc_payload.get("usd"))
-
-
 def collect_event_probabilities(slug: str) -> dict[str, Any]:
     market = get_market_data(slug)
     t0, t1 = market["token_ids"]
@@ -98,7 +82,6 @@ def collect_event_probabilities(slug: str) -> dict[str, Any]:
     return {
         "event_title": market["event_title"],
         "market_question": market["market_question"],
-        "market_end_time": market["market_end_time"],
         "labels": market["labels"],
         "tokens": market["token_ids"],
         "direct_probabilities": [direct0, direct1],
