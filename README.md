@@ -11,7 +11,7 @@ tracker/
   http_client.py   # chamadas HTTP com retry/backoff
   probability.py   # parsing utilitário + normalização
   models.py        # dataclasses
-  service.py       # casos de uso (get_market_data/calculate_probability)
+  service.py       # casos de uso (get_market_data/calculate_probability/get_btc_price_usd)
 dashboard.py       # UI Streamlit
 polymarket_tracker.py  # fachada de compatibilidade
 tests/
@@ -25,9 +25,14 @@ tests/
   - best bid / best ask
   - mid-price
   - spread
+- `get_btc_price_usd()`: consulta a API da CoinGecko para exibir o preço do BTC no painel.
 - Normalização binária para manter soma próxima de 100%.
 - Retry com backoff exponencial para lidar com rate limit e falhas temporárias (implementado com `urllib` da biblioteca padrão).
-- Dashboard Streamlit com atualização automática a cada 3 segundos (sem recarregar a página inteira), barras de progresso UP/DOWN e tendência contra a atualização anterior.
+- Dashboard Streamlit com atualização automática a cada 3 segundos (sem recarregar a página inteira), incluindo:
+  - título dinâmico pelo evento/slug
+  - preço do BTC acima das probabilidades
+  - tempo restante para encerramento do mercado
+  - barras de probabilidade UP/DOWN e tendência contra atualização anterior.
 
 ## Como rodar
 
